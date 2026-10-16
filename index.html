@@ -1,0 +1,960 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Free weekly meal planner for students in Cyprus who train. Enter your food budget and goal and get a shopping list with ballpark prices, 7 days of meals and easy recipes.">
+<meta property="og:title" content="Budget Gains">
+<meta property="og:description" content="Gym food on a student budget in Cyprus. Free weekly meal plans and shopping lists.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#1f6b45">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23f5c518'/%3E%3Ctext x='32' y='43' font-family='Arial,sans-serif' font-size='30' font-weight='800' text-anchor='middle' fill='%2318201b'%3EBG%3C/text%3E%3C/svg%3E">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}html{scroll-behavior:smooth}</style>
+<title>Budget Gains</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: supermarket-aisle sheet — single reading column, shelf-tag yellow price labels, receipt-mono numbers */
+:root{
+--bg:#f6f7f4; --surface:#ffffff; --ink:#18201b; --muted:#5b665f; --line:#dde2dc;
+--tag:#f5c518; --tag-ink:#18201b; --accent:#1f6b45; --accent-soft:#e3efe7; --warn:#a2461f;
+--display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+--body:"Source Sans 3",ui-sans-serif,system-ui,sans-serif;
+--mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+--bg:#121714; --surface:#1a211d; --ink:#e8ede9; --muted:#9aa69f; --line:#2c3630;
+--tag:#e9b90f; --tag-ink:#141a16; --accent:#6fcf97; --accent-soft:#1f3328; --warn:#f0a07a; color-scheme:dark}}
+:root[data-theme="dark"]{
+--bg:#121714; --surface:#1a211d; --ink:#e8ede9; --muted:#9aa69f; --line:#2c3630;
+--tag:#e9b90f; --tag-ink:#141a16; --accent:#6fcf97; --accent-soft:#1f3328; --warn:#f0a07a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;
+padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:880px;margin:0 auto}
+h1,h2,h3{font-family:var(--display);line-height:1.1;text-wrap:balance;margin:0}
+h1{font-size:clamp(2.2rem,6vw,3.6rem);font-weight:800;letter-spacing:-.02em}
+h2{font-size:clamp(1.6rem,4vw,2.2rem);font-weight:800;letter-spacing:-.01em}
+h3{font-size:1.2rem;font-weight:500}
+p{margin:0;max-width:65ch}
+a{color:var(--accent)}
+.eyebrow{font-family:var(--mono);font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted);font-size:.93rem}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;gap:16px;align-items:center;padding-block:12px}
+nav .links{display:flex;gap:16px;overflow-x:auto;white-space:nowrap;min-width:0;scrollbar-width:none}
+nav .links::-webkit-scrollbar{display:none}
+nav .brand{font-family:var(--display);font-weight:800;margin-right:auto;white-space:nowrap}
+nav a{color:var(--ink);text-decoration:none;font-weight:600;font-size:.95rem}
+nav a:hover,nav a:focus-visible{color:var(--accent)}
+section{padding-block:52px;border-bottom:1px solid var(--line)}
+section > .wrap{display:grid;gap:22px}
+.hero{padding-block:56px 48px}
+.hero .wrap{display:grid;gap:18px}
+.lede{font-size:1.2rem;color:var(--muted)}
+.btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn{font:600 1rem var(--body);border:2px solid var(--ink);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:6px;cursor:pointer;text-decoration:none;display:inline-block}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.small{font-size:.9rem;padding:6px 12px;border-width:1.5px}
+.btn:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,button:focus-visible{outline:3px solid var(--tag);outline-offset:2px}
+.shelftag{display:inline-flex;flex-direction:column;background:var(--tag);color:var(--tag-ink);padding:6px 12px 8px;border-radius:3px;font-family:var(--mono);line-height:1.2;width:max-content;max-width:100%}
+.shelftag b{font-size:1.6rem}
+.shelftag small{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.note{border-left:3px solid var(--warn);padding:10px 14px;background:var(--surface);font-size:.95rem;max-width:none}
+.note strong{color:var(--warn)}
+.tablebox{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:.95rem}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+td.num,th.num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums}
+tr:last-child td{border-bottom:0}
+.per25{background:var(--tag);color:var(--tag-ink);font-family:var(--mono);font-weight:600;padding:2px 8px;border-radius:2px;white-space:nowrap}
+label{display:grid;gap:4px;font-size:.85rem;font-weight:600;color:var(--muted)}
+input,select{font:inherit;font-size:1rem;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:5px;padding:8px 10px;width:100%;min-width:0}
+.calc{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;align-items:end;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:18px}
+.formula{font-family:var(--mono);font-size:.95rem;background:var(--accent-soft);padding:10px 14px;border-radius:6px;overflow-x:auto}
+details{border:1px solid var(--line);border-radius:8px;background:var(--bg)}
+details > summary{cursor:pointer;padding:13px 16px;font-family:var(--display);font-weight:500;font-size:1.08rem;list-style:none;display:flex;justify-content:space-between;gap:12px;align-items:center}
+details > summary::-webkit-details-marker{display:none}
+details > summary::after{content:"+";font-family:var(--mono);color:var(--muted)}
+details[open] > summary::after{content:"–"}
+.dbody{padding:0 16px 18px;display:grid;gap:14px}
+/* ---------- form ---------- */
+.planner-form{display:grid;gap:22px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px}
+.step{display:grid;gap:12px}
+.stepn{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;align-items:end}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg input{position:absolute;opacity:0;width:1px;height:1px}
+.seg label,.chipbtn{display:block;cursor:pointer;border:1.5px solid var(--line);border-radius:6px;padding:8px 13px;font:600 .95rem var(--body);color:var(--ink);background:var(--bg)}
+.seg input:checked + label{border-color:var(--ink);background:var(--ink);color:var(--bg)}
+.seg input:focus-visible + label{outline:3px solid var(--tag);outline-offset:2px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips input{position:absolute;opacity:0;width:1px;height:1px}
+.chips label{cursor:pointer;border:1px solid var(--line);border-radius:99px;padding:5px 12px;font-size:.88rem;font-weight:600;color:var(--ink);background:var(--bg)}
+.chips input:checked + label{background:var(--warn);border-color:var(--warn);color:var(--bg);text-decoration:line-through}
+.chips input:focus-visible + label{outline:3px solid var(--tag);outline-offset:2px}
+.checkrow{display:flex;gap:8px;align-items:center;font-size:.95rem;font-weight:400;color:var(--ink)}
+.checkrow input{width:auto;accent-color:var(--accent)}
+.budgetfield{display:flex;align-items:center;gap:8px;background:var(--tag);color:var(--tag-ink);padding:8px 12px;border-radius:4px;width:max-content;max-width:100%}
+.budgetfield span{font-family:var(--mono);font-size:1.7rem;font-weight:600;color:var(--tag-ink)}
+.budgetfield input{width:4em;font-family:var(--mono);font-size:1.7rem;font-weight:600;background:transparent;border:0;border-bottom:2px solid var(--tag-ink);border-radius:0;color:var(--tag-ink);padding:0 2px}
+.budgetfield small{font-family:var(--mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--tag-ink)}
+.planner-form details{background:var(--bg)}
+.bodysum{font-family:var(--mono);font-size:.78rem;color:var(--muted);font-weight:400;margin-left:auto;margin-right:8px;text-align:right}
+/* ---------- results ---------- */
+.result{display:grid;gap:26px}
+.rhead{display:grid;gap:4px}
+.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:12px}
+.sbox{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px;display:grid;gap:6px;align-content:start}
+.sbox.key{border:2px solid var(--ink)}
+.sbox .k{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.sbox .v{font-family:var(--mono);font-size:1.5rem;font-weight:600;line-height:1.1;font-variant-numeric:tabular-nums}
+.sbox .s{font-size:.85rem;color:var(--muted)}
+.meter{height:8px;background:var(--line);border-radius:4px;overflow:hidden}
+.meter span{display:block;height:100%;background:var(--accent)}
+.alert{border-left:3px solid var(--warn);background:var(--surface);padding:14px 16px;border-radius:0 6px 6px 0;display:grid;gap:10px}
+.alert.ok{border-left-color:var(--accent)}
+.conf{display:inline-flex;gap:6px;align-items:center;font-size:.85rem;font-weight:700;padding:3px 10px;border-radius:99px;background:var(--line);color:var(--ink)}
+.conf.est::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--warn)}
+.conf.chk::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.storecmp{display:flex;gap:8px;flex-wrap:wrap}
+.storecmp span{font-family:var(--mono);font-size:.85rem;border:1px solid var(--line);border-radius:4px;padding:4px 10px;background:var(--surface)}
+.storecmp span.cur{border-color:var(--ink);font-weight:600}
+.trips{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px;align-items:start}
+.trip{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;display:grid;gap:4px;min-width:0}
+.trip h3{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:6px}
+.trip h3 .mono{font-size:1rem}
+.cat{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:10px;border-bottom:1px solid var(--line);padding-bottom:4px}
+.gi{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;font-size:.98rem;padding-block:8px;border-bottom:1px dashed var(--line);color:var(--ink);font-weight:400;cursor:pointer}
+.gi input{width:22px;height:22px;accent-color:var(--accent);margin:0}
+.gi .nm{min-width:0}
+.gi .nm small{display:block;color:var(--muted);font-size:.8rem}
+.gi .pr{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right}
+.gi .pr small{display:block;font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.gi.done .nm{text-decoration:line-through;color:var(--muted)}
+.days{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.day{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px;display:grid;gap:8px;align-content:start}
+.day h4{margin:0;font-family:var(--display);font-weight:800;font-size:1.05rem;display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.day h4 small{font-family:var(--mono);font-weight:400;font-size:.72rem;color:var(--accent);text-transform:uppercase;letter-spacing:.06em}
+.slot{display:grid;gap:1px;font-size:.92rem}
+.slot .lab{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.slot .from{font-size:.8rem;color:var(--muted)}
+.badge{font-family:var(--mono);font-size:.68rem;padding:1px 6px;border-radius:3px;background:var(--accent-soft);color:var(--accent);margin-left:4px;white-space:nowrap}
+.daynut{font-family:var(--mono);font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);padding-top:6px}
+.sched{display:grid;gap:8px;list-style:none;padding:0;margin:0}
+.sched li{display:grid;grid-template-columns:5.5em 1fr;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:10px 12px;font-size:.95rem}
+.sched li b.d{font-family:var(--mono);font-size:.85rem}
+.sched li div{min-width:0}
+.recipes{display:grid;gap:10px}
+.rec .meta{display:flex;gap:8px;flex-wrap:wrap;font-family:var(--mono);font-size:.8rem;color:var(--muted)}
+.rec ul,.rec ol{margin:0;padding-left:1.3em;display:grid;gap:4px}
+.twocol{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+.twocol > div{min-width:0;display:grid;gap:8px;align-content:start}
+.twocol ul{margin:0;padding-left:1.2em;display:grid;gap:6px}
+/* ---------- library ---------- */
+.libgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.mcard{background:var(--surface);border:1px solid var(--line);border-radius:8px}
+.mcard > summary{padding:14px;display:grid;gap:6px;font-size:1rem}
+.mcard > summary::after{display:none}
+.mcard .mt{font-family:var(--display);font-weight:500;font-size:1.05rem;line-height:1.2}
+.mcard .nums{display:flex;gap:10px;flex-wrap:wrap;font-family:var(--mono);font-size:.8rem;color:var(--muted)}
+.mcard .nums b{color:var(--ink);font-weight:600}
+.tagrow{display:flex;gap:4px;flex-wrap:wrap}
+.tg{font-size:.72rem;font-weight:700;padding:1px 7px;border-radius:99px;background:var(--line);color:var(--ink)}
+.tg.cy{background:var(--tag);color:var(--tag-ink)}
+.tg.veg{background:var(--accent-soft);color:var(--accent)}
+.mcard .dbody{font-size:.93rem}
+.mcard ul,.mcard ol{margin:0;padding-left:1.2em;display:grid;gap:3px}
+/* ---------- about ---------- */
+.about{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px}
+.about div{display:grid;gap:6px;align-content:start;min-width:0}
+.about p{font-size:.97rem}
+.contact{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--surface);border:1px dashed var(--line);border-radius:8px;padding:12px 14px}
+footer{padding-block:32px;color:var(--muted);font-size:.9rem}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 16px;border-radius:6px;font-size:.9rem;opacity:0;pointer-events:none;transition:opacity .2s;z-index:10}
+.toast.on{opacity:1}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<nav><div class="wrap">
+<span class="brand">Budget Gains</span>
+<div class="links">
+<a href="#planner">Planner</a>
+<a href="#meals">Meals</a>
+<a href="#protein">Protein prices</a>
+<a href="#prep">Meal-prep guide</a>
+<a href="#about">How it works</a>
+</div>
+</div></nav>
+<header class="hero"><div class="wrap">
+<span class="eyebrow">Free · for students in Cyprus who train</span>
+<h1>Eat for your goal. Shop inside your budget.</h1>
+<p class="lede">Type what you can spend this week. Get a shopping list with ballpark Cyprus prices, a 7-day meal plan and easy recipes, sized for building muscle, maintaining or losing fat.</p>
+<div class="btns">
+<a class="btn" href="#planner">Build my plan</a>
+<a class="btn ghost" href="#prep">Read the meal-prep guide</a>
+</div>
+<p class="muted">A free student project. All prices are ballpark estimates, not live supermarket prices.</p>
+</div></header>
+<section id="planner"><div class="wrap">
+<span class="eyebrow">Weekly planner</span>
+<h2>Build your week</h2>
+<form class="planner-form" id="pf" novalidate>
+<div class="step">
+<span class="stepn">Step 1 of 3</span>
+<h3>What's your weekly food budget?</h3>
+<div class="row" style="gap:14px">
+<label class="budgetfield" for="fBudget"><span>€</span><input id="fBudget" type="number" min="15" max="200" step="1" value="50" inputmode="numeric"><small>per<br>week</small></label>
+<div class="row" style="gap:6px" id="quickBudget">
+<button type="button" class="chipbtn" data-b="30">€30</button>
+<button type="button" class="chipbtn" data-b="50">€50</button>
+<button type="button" class="chipbtn" data-b="60">€60</button>
+</div>
+</div>
+<p class="muted" style="font-size:.88rem">Your shopping list stays inside this budget at ballpark Cyprus supermarket prices. Real prices vary, so leave yourself a little spare.</p>
+</div>
+<div class="step">
+<span class="stepn">Step 2 of 3</span>
+<h3>What's your main goal?</h3>
+<div class="seg" role="radiogroup" aria-label="Goal">
+<input type="radio" name="goal" id="gCut" value="cut"><label for="gCut">Lose fat</label>
+<input type="radio" name="goal" id="gMain" value="maintain"><label for="gMain">Maintain</label>
+<input type="radio" name="goal" id="gBulk" value="bulk" checked><label for="gBulk">Build muscle</label>
+</div>
+</div>
+<div class="step">
+<span class="stepn">Step 3 of 3</span>
+<h3>How do you shop, and what do you eat?</h3>
+<div class="fgrid">
+<label for="fDiet">I eat<select id="fDiet"><option value="all">Everything</option><option value="nopork">Everything except pork</option><option value="pesc">Fish but no meat</option><option value="veg">Vegetarian</option></select></label>
+<div style="display:grid;gap:4px"><span style="font-size:.85rem;font-weight:600;color:var(--muted)">I go shopping</span>
+<div class="seg"><input type="radio" name="trips" id="tr1" value="1" checked><label for="tr1">Once a week</label><input type="radio" name="trips" id="tr2" value="2"><label for="tr2">Twice</label></div></div>
+</div>
+<div style="display:grid;gap:6px">
+<span style="font-size:.85rem;font-weight:600;color:var(--muted)">Allergies and intolerances (strict: these are never included)</span>
+<div class="chips" id="allergyChips"></div>
+<p class="muted" style="font-size:.85rem">We can't check packaged products for traces or cross-contact. Always read the label. If you have coeliac disease, only buy products labelled gluten-free.</p>
+</div>
+</div>
+<details id="bodyBox">
+<summary>About you <span class="bodysum" id="bodySum"></span></summary>
+<div class="dbody">
+<p class="muted">Used only to estimate how much to eat. Nothing leaves your browser.</p>
+<div class="fgrid">
+<label for="fSex">Sex<select id="fSex"><option value="m">Male</option><option value="f">Female</option></select></label>
+<label for="fW">Weight (kg)<input id="fW" type="number" min="40" max="160" value="72"></label>
+<label for="fH">Height (cm)<input id="fH" type="number" min="140" max="210" value="178"></label>
+<label for="fA">Age<input id="fA" type="number" min="18" max="70" value="20"></label>
+<label for="fAct">How active are you?<select id="fAct"><option value="1.375">Train 1–2×, sit most of the day</option><option value="1.55" selected>Train 3–4×, walk a fair bit</option><option value="1.725">Train 5×+, on my feet a lot</option></select></label>
+</div>
+<label for="fKcal" style="max-width:340px">Know your calorie target? Enter it to replace our estimate<input id="fKcal" type="number" min="1200" max="5000" step="50" placeholder="Leave empty to use our estimate"></label>
+</div>
+</details>
+<details>
+<summary>More preferences</summary>
+<div class="dbody">
+<div class="fgrid">
+<label for="fSnacks">Snacks per day<select id="fSnacks"><option>0</option><option>1</option><option selected>2</option><option>3</option></select></label>
+<label for="fVar">Variety<select id="fVar"><option value="low">Low (cheapest)</option><option value="med" selected>Medium</option><option value="high">High</option></select></label>
+<label for="fTime">Cooking time<select id="fTime"><option value="any">Any</option><option value="quick">20 min or less per meal</option></select></label>
+<label for="fKitchen">My kitchen<select id="fKitchen"><option value="oven">Hob and oven</option><option value="hob">Hob only, no oven</option></select></label>
+</div>
+<div style="display:grid;gap:6px"><span style="font-size:.85rem;font-weight:600;color:var(--muted)">Foods I don't like (tap to leave out)</span><div class="chips" id="dislikeChips"></div></div>
+<div class="row" style="gap:18px">
+<label class="checkrow" for="fOil"><input type="checkbox" id="fOil" checked> I already have olive oil, salt &amp; basic spices</label>
+<label class="checkrow" for="fBuffer"><input type="checkbox" id="fBuffer" checked> Keep 5% of my budget spare for price changes</label>
+</div>
+</div>
+</details>
+<div class="btns"><button class="btn" type="submit">Build my weekly plan</button></div>
+</form>
+<div class="result" id="result" aria-live="polite"></div>
+</div></section>
+<section id="meals"><div class="wrap">
+<span class="eyebrow">Meal library</span>
+<h2>All 44 meals</h2>
+<p>Nutrition and cost are for one standard portion. The planner makes portions bigger to build muscle and smaller to lose fat. Costs are ballpark Cyprus supermarket prices and count only the part of each pack you use.</p>
+<div class="seg" id="libTabs">
+<input type="radio" name="lib" id="lb" value="b" checked><label for="lb">Breakfast (13)</label>
+<input type="radio" name="lib" id="lm" value="m"><label for="lm">Lunch &amp; dinner (20)</label>
+<input type="radio" name="lib" id="ls" value="s"><label for="ls">Snacks (11)</label>
+</div>
+<div class="libgrid" id="libGrid"></div>
+</div></section>
+<section id="prep"><div class="wrap">
+<span class="eyebrow">Meal-prep guide</span>
+<h2>Shop once, cook twice, eat well all week</h2>
+<p>A short guide to making the planner work in a real student week in Cyprus. Read it once, then keep it open on shop day.</p>
+<div class="recipes">
+<details open><summary>1 · Shopping smart in Cyprus</summary><div class="dbody">
+<ul style="margin:0;padding-left:1.2em;display:grid;gap:8px">
+<li><b>Pick one supermarket for the main shop.</b> Splitting a small list across stores wastes time and bus money. Prices for the same basket can differ by around 10% between chains, so compare a few staples you buy every week and stick with the cheapest for you. The government's e-Kalathi price comparison can help.</li>
+<li><b>Buy own-brand for staples.</b> Rice, pasta, oats, canned tomatoes, beans, frozen vegetables and tuna are basically the same product for less money.</li>
+<li><b>Check the weekly offers before you go.</b> Most supermarkets publish weekly leaflets and app offers. If chicken or yogurt is on offer, swap a meal in the planner to use it.</li>
+<li><b>Shop after you eat, with the list.</b> Tick items off on your phone and don't add anything that isn't on it.</li>
+<li><b>Use what's in season.</b> Cyprus citrus is cheap through the winter, and local tomatoes, cucumbers and courgettes are cheapest in the warmer months.</li>
+<li><b>Compare the price per kilo,</b> not the pack price. It's on the shelf label in small print.</li>
+</ul>
+</div></details>
+<details><summary>2 · Your weekly cooking session (about 90 minutes)</summary><div class="dbody">
+<p>Do this on shop day or the evening after. It covers the first 2–3 days, and every dinner after that makes the next day's lunch.</p>
+<ol style="margin:0;padding-left:1.3em;display:grid;gap:8px">
+<li><b>Start the slow things (0–10 min).</b> Put lentils or soaked chickpeas on to boil. Start the oven if you're doing a tray bake.</li>
+<li><b>Rice or bulgur (10–25 min).</b> Cook 2–3 days' worth at once. Spread it on a tray to cool fast, then put it in the fridge within an hour.</li>
+<li><b>Boil eggs (while the rice cooks).</b> 6–8 at once for snacks and breakfasts.</li>
+<li><b>Chop once (25–45 min).</b> Onions, peppers and carrots for the next three dinners. Keep them in a tub lined with paper towel.</li>
+<li><b>Cook the first dinner (45–80 min).</b> Make the full 2 portions. Eat one and put one straight into a lunch tub.</li>
+<li><b>Portion and label (80–90 min).</b> Write the day on each tub. Freeze any meat you won't cook in the next 2 days.</li>
+</ol>
+</div></details>
+<details><summary>3 · Kit you actually need</summary><div class="dbody">
+<ul style="margin:0;padding-left:1.2em;display:grid;gap:6px">
+<li>One large pot with a lid, one non-stick frying pan, and one baking tray if you have an oven.</li>
+<li>6–8 food tubs with lids (about 750 ml each), microwave-safe.</li>
+<li>A sharp knife, a chopping board, a wooden spoon and a sieve.</li>
+<li>Optional: kitchen scales for the first couple of weeks. After that you'll judge portions by eye.</li>
+</ul>
+<p class="muted">No oven? Choose "Hob only" in the planner and it leaves out oven meals.</p>
+</div></details>
+<details><summary>4 · Storing food safely</summary><div class="dbody">
+<ul style="margin:0;padding-left:1.2em;display:grid;gap:6px">
+<li>Keep your fridge at 5 °C or below. Raw meat goes on the bottom shelf, in a container.</li>
+<li>Cool cooked food fast and put it in the fridge within an hour.</li>
+<li><b>Cooked rice:</b> eat it within 24 hours, and reheat it only once.</li>
+<li><b>Other cooked leftovers:</b> eat within 2–3 days, or freeze them.</li>
+<li>Thaw frozen meat in the fridge overnight, never on the counter.</li>
+<li>Reheat until steaming hot all the way through.</li>
+<li>If something smells or looks wrong, throw it out. Food poisoning costs more than the food.</li>
+</ul>
+</div></details>
+<details><summary>5 · Cheaper swaps that keep the protein</summary><div class="dbody">
+<div class="tablebox"><table style="min-width:460px">
+<thead><tr><th>Instead of</th><th>Try</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td>Chicken breast</td><td>Chicken thighs</td><td>Cheaper per kilo, juicier, hard to overcook</td></tr>
+<tr><td>Fresh vegetables</td><td>Frozen mixed veg or spinach</td><td>Cheaper, no waste, just as nutritious</td></tr>
+<tr><td>Canned chickpeas</td><td>Dried chickpeas</td><td>Much cheaper per portion; just soak overnight</td></tr>
+<tr><td>Branded yogurt</td><td>Own-brand strained yogurt, 1 kg tub</td><td>Same protein, lower price per kilo</td></tr>
+<tr><td>Protein bars</td><td>Boiled eggs, yogurt, milk</td><td>A fraction of the cost per gram of protein</td></tr>
+<tr><td>Takeaway souvlaki</td><td>Homemade souvlaki pitta</td><td>Same meal, much cheaper, more protein</td></tr>
+</tbody>
+</table></div>
+</div></details>
+<details><summary>6 · Eating for your goal</summary><div class="dbody">
+<ul style="margin:0;padding-left:1.2em;display:grid;gap:8px">
+<li><b>Building muscle:</b> eat a little more than you burn. Aim to gain about 0.25–0.5% of your body weight a week. If you gain faster, cut some rice, bread or oil. The planner adds extra calories mainly through cheap carbs, not more meat.</li>
+<li><b>Maintaining:</b> keep your weight steady and your protein up. This is a good place to start if you're new to training.</li>
+<li><b>Losing fat:</b> eat a little less than you burn and keep protein high, so you keep your muscle. Losing 0.5–1% of body weight a week is a sensible pace.</li>
+<li><b>Spread your protein</b> across 3–4 meals instead of one big serving.</li>
+<li><b>Check and adjust.</b> Weigh yourself 3–4 mornings a week and compare weekly averages. After 2–3 weeks, adjust your calorie target in "About you" if needed.</li>
+<li><b>Don't use automatic targets</b> if you're under 18, pregnant, have a medical condition or a history of disordered eating. Talk to a doctor or registered dietitian.</li>
+</ul>
+</div></details>
+<details><summary>7 · Living with flatmates</summary><div class="dbody">
+<ul style="margin:0;padding-left:1.2em;display:grid;gap:6px">
+<li>Ask for one fridge shelf and one cupboard shelf, and label your tubs.</li>
+<li>Cook when the kitchen is quiet, and clean as you go.</li>
+<li>Share the basics, like oil, salt and spices, and split the cost.</li>
+<li>Cook together: two people using the same plan can buy bigger packs and pay less each.</li>
+</ul>
+</div></details>
+<details><summary>8 · The starter cupboard (buy once)</summary><div class="dbody">
+<p>Olive oil, salt, black pepper, oregano, paprika, cumin, cinnamon and garlic powder. Together these come to roughly €12–18 at the estimated prices, and they last for months. If you share with flatmates, it's a few euros each. Recipes in the planner assume you have them.</p>
+</div></details>
+</div>
+</div></section>
+<section id="protein"><div class="wrap">
+<span class="eyebrow">Protein for your money</span>
+<h2>What 25 g of protein costs</h2>
+<p>Cheapest first, using ballpark Cyprus supermarket prices. The yellow tag is the cost of 25 g of protein from that food. Cheap protein is only part of a good diet, so mix these with vegetables, fruit and whole grains.</p>
+<div class="tablebox"><table>
+<thead><tr><th>Food</th><th>Serving</th><th class="num">Protein</th><th class="num">€ / serving</th><th class="num">€ / 25 g protein</th></tr></thead>
+<tbody id="protBody"></tbody>
+</table></div>
+<div class="calc">
+<label for="cPrice">Price per serving (€)<input id="cPrice" type="number" step="0.01" min="0" value="0.80"></label>
+<label for="cProt">Protein per serving (g)<input id="cProt" type="number" step="0.5" min="0" value="20"></label>
+<div><span class="eyebrow">Cost per 25 g protein</span><div class="shelftag" style="margin-top:4px"><b id="cOut">€1.00</b></div></div>
+</div>
+<p class="formula">cost per 25 g = (price per serving ÷ protein per serving) × 25</p>
+</div></section>
+<section id="about"><div class="wrap">
+<span class="eyebrow">How it works</span>
+<h2>What this tool can and can't do</h2>
+<div class="about">
+<div><h3>Who made it</h3><p>A university student in Cyprus who trains and wanted to eat well on a student budget. It's a free student project, with nothing to buy and no ads. It isn't run by a dietitian or a doctor.</p></div>
+<div><h3>Prices are a ballpark</h3><p>Every price is a ballpark estimate of a typical Cyprus supermarket price, based on Cyprus Consumer Association averages (May 2026). They aren't live prices and they don't come from any particular store. Real prices differ between shops, brands and weeks, so use the totals as a guide, not a quote.</p></div>
+<div><h3>How calories and protein are estimated</h3><p>Calories use the Mifflin–St Jeor formula with your activity level: 15% less to lose fat, 10% more to build muscle. Protein is 1.6–2.0 g per kg of body weight. These are starting estimates, not prescriptions. Your weight trend, hunger and training tell you more, so adjust after 2–3 weeks or enter your own target.</p></div>
+<div><h3>Who it isn't for</h3><p>If you're under 18, pregnant or breastfeeding, have a medical condition, or have a history of disordered eating, please don't use these automatic targets. Talk to a doctor or registered dietitian instead.</p></div>
+<div><h3>What it promises</h3><p>The shopping list adds up whole packs at the prices shown and never goes over your budget at those prices. If your budget can't cover your target, it tells you instead of quietly giving you less food. It can't promise results; those depend on your training, sleep and consistency.</p></div>
+<div><h3>Your data</h3><p>Nothing you type is sent anywhere. Your answers and your current plan are saved only in this browser so they're still there when you come back.</p></div>
+</div>
+<div class="contact"><span>Spot a wrong price or a mistake? Message me with the product and the price you saw:</span><b class="mono" id="handle">@your.handle</b><button class="btn small ghost" type="button" data-copy="#handle">Copy</button></div>
+</div></section>
+<footer><div class="wrap">Budget Gains · a free student project in Cyprus · ballpark prices, not dietary or medical advice.</div></footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+(function(){
+/* =====================================================================
+PRICES — BALLPARK ESTIMATES (Oct 2026) for a typical Cyprus supermarket.
+Calibrated to Cyprus Consumer Association May 2026 averages.
+No store is named or compared. CHECKED overrides an estimate with a
+real shelf price, e.g. chicken:{cy:{p:4.29,d:"14 Oct 2026"}}
+===================================================================== */
+const STORES={cy:{n:"a typical Cyprus supermarket",m:1.00}};
+const CHECKED={};
+/* id: [name, aisle, pack g/ml, pack label, price €, kcal/100, protein/100, flags, unit g, unit name]
+flags: f=fresh L=liquid D=dairy E=egg F=fish C=poultry B=beef P=pork G=gluten N=nuts/peanuts S=sesame Y=soy */
+const RAW={
+eggs:["Eggs","Fridge",600,"10-pack",3.00,143,12.6,"E",60,"egg"],
+milk:["Semi-skimmed milk","Fridge",1000,"1 L",1.60,47,3.4,"DL"],
+soymilk:["Soy drink","Pantry",1000,"1 L",1.55,40,3.3,"LY"],
+yogurt:["Strained yogurt 2%","Fridge",1000,"1 kg tub",4.40,75,9,"D"],
+halloumi:["Halloumi","Fridge",225,"225 g",2.90,320,22,"D"],
+feta:["Feta","Fridge",200,"200 g",2.30,264,14,"D"],
+cottage:["Cottage cheese","Fridge",250,"250 g",1.65,98,11,"D"],
+cheese:["Grated cheese","Fridge",200,"200 g",2.40,380,25,"D"],
+tofu:["Tofu","Fridge",400,"400 g",3.20,120,13,"Y"],
+hummus:["Hummus","Fridge",200,"200 g",1.55,250,7,"S"],
+turkey:["Turkey breast slices","Fridge",160,"160 g",2.05,105,20,"C"],
+chicken:["Chicken breast fillets","Meat & fish",500,"500 g",4.10,110,23,"fC"],
+thigh:["Chicken thighs, boneless","Meat & fish",500,"500 g",3.60,170,18,"fC"],
+mince:["Beef mince","Meat & fish",500,"500 g",5.10,250,17,"fB"],
+pork:["Pork cubes (for souvla)","Meat & fish",500,"500 g",3.70,150,21,"fP"],
+hake:["Frozen hake fillets","Frozen",600,"600 g",5.60,80,17,"F"],
+frozveg:["Frozen mixed vegetables","Frozen",1000,"1 kg",2.00,60,3,""],
+spinach:["Frozen spinach","Frozen",1000,"1 kg",2.05,25,3,""],
+berries:["Frozen mixed berries","Frozen",500,"500 g",2.80,45,1,""],
+tuna:["Tuna in water","Pantry",112,"can (112 g drained)",1.45,116,26,"F"],
+sardines:["Sardines in olive oil","Pantry",90,"can (90 g drained)",1.00,208,24,"F"],
+lentils:["Dried lentils","Pantry",500,"500 g",1.65,350,24,""],
+chickpeas:["Dried chickpeas","Pantry",500,"500 g",1.50,364,19,""],
+beans:["Red kidney beans","Pantry",240,"can (240 g drained)",0.80,115,7.6,""],
+rice:["Long-grain rice","Pantry",1000,"1 kg",1.90,360,7,""],
+pasta:["Spaghetti or penne","Pantry",500,"500 g",0.90,355,12.5,"G"],
+bulgur:["Pourgouri (bulgur wheat)","Pantry",500,"500 g",1.40,345,12,"G"],
+oats:["Rolled oats","Pantry",500,"500 g",1.20,375,13,"G"],
+ricecakes:["Rice cakes","Pantry",130,"130 g",1.00,390,8,""],
+cantomato:["Chopped tomatoes","Pantry",400,"400 g can",0.70,22,1.2,""],
+passata:["Tomato passata","Pantry",500,"500 g",0.90,30,1.4,""],
+pb:["Peanut butter","Pantry",350,"350 g jar",2.40,600,25,"N"],
+almonds:["Almonds","Pantry",200,"200 g",2.90,580,21,"N"],
+tahini:["Tahini","Pantry",300,"300 g jar",2.60,600,17,"S"],
+honey:["Honey","Pantry",450,"450 g jar",4.20,304,0.3,""],
+oil:["Olive oil","Pantry",1000,"1 L",10.50,884,0,"L"],
+bread:["Wholemeal bread","Bakery",500,"500 g loaf",1.75,250,10,"fG"],
+pitta:["Pitta bread","Bakery",400,"pack of 5",1.20,275,9,"fG",80,"pitta"],
+wraps:["Tortilla wraps","Bakery",360,"pack of 6",1.70,300,8,"G",60,"wrap"],
+potatoes:["Potatoes","Fruit & veg",2000,"2 kg bag",2.50,77,2,""],
+onions:["Onions","Fruit & veg",1000,"1 kg",1.30,40,1.1,""],
+garlic:["Garlic","Fruit & veg",150,"3 bulbs",0.90,149,6,"",5,"clove"],
+tomatoes:["Tomatoes","Fruit & veg",1000,"1 kg",2.50,18,0.9,"f"],
+cucumber:["Cucumbers","Fruit & veg",1000,"1 kg (~3)",1.60,15,0.7,"f"],
+peppers:["Peppers","Fruit & veg",500,"500 g",1.70,26,1,"f"],
+zucchini:["Courgettes (kolokithia)","Fruit & veg",1000,"1 kg",2.00,17,1.2,"f"],
+carrots:["Carrots","Fruit & veg",1000,"1 kg",1.15,41,0.9,""],
+lettuce:["Lettuce","Fruit & veg",300,"1 head",0.95,15,1.4,"f"],
+lemons:["Lemons","Fruit & veg",500,"500 g",1.00,29,1.1,""],
+bananas:["Bananas","Fruit & veg",1000,"1 kg (~7)",1.75,89,1.1,"f",120,"banana"],
+apples:["Apples","Fruit & veg",1000,"1 kg (~6)",1.95,52,0.3,"",170,"apple"],
+oranges:["Oranges","Fruit & veg",2000,"2 kg bag",2.40,47,0.9,"",180,"orange"]
+};
+const I={};for(const k in RAW){const r=RAW[k];I[k]={id:k,n:r[0],cat:r[1],pack:r[2],pl:r[3],price:r[4],kcal:r[5],p:r[6],fl:r[7],ug:r[8]||0,un:r[9]||""}}
+const SWAP={milk:"soymilk"};
+const CATS=["Fruit & veg","Meat & fish","Fridge","Bakery","Frozen","Pantry"];
+/* ---------------------------- MEALS ----------------------------
+ing: [id, grams per standard portion, optional?]
+min = total time, act = hands-on time, oven = needs an oven, cy = Cypriot, soak = overnight soak */
+const MEALS=[
+{id:"b1",t:"b",n:"Overnight oats with banana & peanut butter",min:5,act:5,ing:[["oats",60],["milk",200],["bananas",100],["pb",15]],steps:["The night before, mix the oats and milk in a jar or tub.","Stir in the peanut butter, cover and put in the fridge.","In the morning, slice the banana on top. Eat cold, or microwave for 2 minutes."],keep:"Keeps 2 days in the fridge, so make two jars at once."},
+{id:"b2",t:"b",n:"Strained yogurt bowl with oats & berries",min:5,act:5,ing:[["yogurt",200],["oats",40],["berries",80],["honey",10]],steps:["Put the yogurt in a bowl.","Add the berries straight from the freezer; they thaw in about 10 minutes.","Top with oats and a drizzle of honey."],keep:"Assemble fresh. Oats go soft after a few hours."},
+{id:"b3",t:"b",n:"Scrambled eggs on toast with tomato",min:10,act:10,ing:[["eggs",180],["bread",80],["tomatoes",100],["oil",5]],steps:["Whisk the eggs with a pinch of salt.","Heat the oil in a pan on low, add the eggs and stir slowly until just set.","Serve on toast with the sliced tomato."],keep:"Best eaten straight away."},
+{id:"b4",t:"b",n:"Peanut butter banana toast & a glass of milk",min:5,act:5,ing:[["bread",80],["pb",20],["bananas",100],["milk",250]],steps:["Toast the bread.","Spread on the peanut butter and top with sliced banana.","Have it with a glass of milk."],keep:"Make fresh."},
+{id:"b5",t:"b",n:"Halloumi, tomato & cucumber pitta",min:10,act:10,cy:1,ing:[["pitta",80],["halloumi",50],["tomatoes",80],["cucumber",60]],steps:["Slice the halloumi and fry it in a dry pan for 1–2 minutes per side until golden.","Warm the pitta in the same pan.","Fill with halloumi, tomato and cucumber."],keep:"Opened halloumi keeps 5 days in its brine or wrapped in the fridge."},
+{id:"b6",t:"b",n:"Apple & cinnamon porridge",min:8,act:8,ing:[["oats",70],["milk",250],["apples",150],["honey",10]],steps:["Grate or chop the apple.","Simmer the oats, milk and apple for 4–5 minutes, stirring.","Finish with cinnamon and honey."],keep:"Keeps 2 days. Loosen with a splash of milk when reheating."},
+{id:"b7",t:"b",n:"Spinach & feta omelette with toast",min:12,act:12,ing:[["eggs",180],["spinach",80],["feta",30],["bread",50],["oil",5]],steps:["Thaw the spinach in the pan with the oil for 2 minutes and squeeze out the water.","Pour in the whisked eggs and crumble the feta on top.","Cook on low until set, fold and serve with toast."],keep:"Best eaten straight away."},
+{id:"b8",t:"b",n:"Egg & cheese breakfast wrap",min:10,act:10,ing:[["wraps",60],["eggs",120],["cheese",20],["peppers",50],["oil",5]],steps:["Fry the diced pepper in the oil for 2 minutes.","Add the whisked eggs and scramble.","Fill the warm wrap with the eggs and cheese, then roll it up."],keep:"Wrap it in foil to eat on the way to uni."},
+{id:"b9",t:"b",n:"Cottage cheese & tomato toast",min:5,act:5,ing:[["bread",80],["cottage",150],["tomatoes",100]],steps:["Toast the bread.","Spread thickly with cottage cheese.","Top with sliced tomato, salt, pepper and oregano."],keep:"Make fresh."},
+{id:"b10",t:"b",n:"Banana oat pancakes with yogurt",min:15,act:15,ing:[["oats",60],["eggs",120],["bananas",100],["yogurt",100,1],["honey",10]],steps:["Mash the banana and mix in the eggs and oats. Rest the batter for 5 minutes.","Cook small pancakes in a non-stick pan for 2 minutes per side.","Serve with yogurt and honey."],keep:"Cooked pancakes keep 2 days in the fridge or 1 month frozen."},
+{id:"b11",t:"b",n:"Turkey & cheese toastie",min:8,act:8,ing:[["bread",80],["turkey",60],["cheese",20],["tomatoes",60]],steps:["Fill two slices of bread with the turkey, cheese and tomato.","Press in a toastie maker or a dry pan, 3 minutes per side."],keep:"Use opened turkey slices within 3 days."},
+{id:"b12",t:"b",n:"Tahini & honey toast with milk",min:5,act:5,cy:1,ing:[["bread",80],["tahini",20],["honey",15],["milk",250]],steps:["Toast the bread.","Mix the tahini and honey and spread it on the toast.","Have it with a glass of milk."],keep:"Tahini keeps for months in the cupboard. Stir it before use."},
+{id:"b13",t:"b",n:"Tofu scramble wrap",min:12,act:12,ing:[["tofu",150],["wraps",60],["spinach",60],["peppers",50],["oil",5]],steps:["Crumble the tofu into a pan with the oil, pepper and spinach.","Season with paprika, salt and pepper and cook for 5 minutes.","Roll it up in the warm wrap."],keep:"Opened tofu keeps 3 days in the fridge covered in water."},
+{id:"m1",t:"m",n:"Chicken souvlaki pitta with tzatziki",min:25,act:20,cy:1,ing:[["chicken",150],["pitta",80],["tomatoes",80],["cucumber",60],["onions",30],["yogurt",60,1],["lemons",10],["oil",5]],steps:["Cube the chicken and toss it with oil, lemon, oregano and salt.","Cook on a hot pan or grill for 8–10 minutes, turning, until cooked through.","For tzatziki, mix the yogurt with grated cucumber, garlic and salt.","Fill the warm pitta with chicken, tomato, onion and tzatziki."],keep:"Store cooked chicken and pitta separately and assemble when you eat it."},
+{id:"m2",t:"m",n:"Chicken, rice & veg bowl",min:30,act:15,ing:[["chicken",150],["rice",80],["frozveg",150],["oil",8]],steps:["Cook the rice (1 part rice to 2 parts water, 12–15 minutes).","Season the chicken with paprika, salt and pepper. Pan-fry for 5–6 minutes per side.","Steam or pan-fry the frozen veg for 5 minutes. Slice the chicken over the rice and veg."],keep:"Cool within an hour and refrigerate. Eat the rice within 1 day."},
+{id:"m3",t:"m",n:"Fakes (lentil soup) with bread",min:40,act:10,cy:1,ing:[["lentils",80],["carrots",60],["onions",50],["cantomato",100],["garlic",5],["oil",10],["bread",60]],steps:["Rinse the lentils. Soften the chopped onion, carrot and garlic in the oil.","Add the lentils, tomatoes, a bay leaf and about 4× their volume of water.","Simmer for 30 minutes until thick. Finish with a squeeze of lemon and serve with bread."],keep:"Keeps 3 days in the fridge or 2 months frozen."},
+{id:"m4",t:"m",n:"Spaghetti bolognese",min:35,act:15,ing:[["mince",125],["pasta",100],["passata",125],["onions",50],["carrots",40],["garlic",5],["oil",5]],steps:["Brown the mince in the oil and drain any excess fat.","Add the chopped onion, carrot and garlic and cook for 5 minutes.","Add the passata and oregano and simmer for 20 minutes.","Cook the pasta and serve with the sauce."],keep:"Sauce keeps 3 days in the fridge or 3 months frozen."},
+{id:"m5",t:"m",n:"Tuna tomato pasta",min:20,act:10,ing:[["pasta",100],["tuna",112],["cantomato",150],["onions",40],["garlic",5],["oil",8]],steps:["Cook the pasta.","Meanwhile, soften the onion and garlic in the oil and add the tomatoes. Simmer for 10 minutes.","Stir in the drained tuna, then mix with the pasta."],keep:"Keeps 2 days in the fridge. Good cold too."},
+{id:"m6",t:"m",n:"Chickpea & spinach stew with rice",min:75,act:15,soak:1,ing:[["chickpeas",70],["spinach",120],["cantomato",150],["onions",50],["rice",60],["oil",10]],steps:["The night before, soak the chickpeas in plenty of water. Next day, boil them for 45–60 minutes until soft.","Soften the onion in the oil with cumin and paprika. Add the tomatoes, spinach and chickpeas.","Simmer for 15 minutes and serve with rice."],keep:"Stew keeps 3 days. Cooked chickpeas freeze well."},
+{id:"m7",t:"m",n:"Pourgouri with chicken thighs & yogurt",min:35,act:15,cy:1,ing:[["bulgur",80],["thigh",150],["onions",50],["passata",80],["yogurt",80,1],["oil",8]],steps:["Brown the chicken pieces in the oil and set them aside.","Soften the onion, add the bulgur and stir for 1 minute.","Add the passata and 2× the bulgur's volume of water, then put the chicken back in. Cover and simmer for 15 minutes.","Rest for 5 minutes and serve with a spoon of yogurt."],keep:"Keeps 2 days in the fridge."},
+{id:"m8",t:"m",n:"Lemon baked hake with potatoes & courgettes",min:40,act:10,oven:1,ing:[["hake",180],["potatoes",250],["zucchini",150],["lemons",20],["oil",12]],steps:["Cut the potatoes and courgettes into chunks and toss with oil, lemon, oregano and salt.","Roast at 200 °C for 20 minutes.","Add the hake fillets (from frozen is fine) and roast for 15–18 minutes more."],keep:"Keeps 1–2 days. Reheat until steaming hot."},
+{id:"m9",t:"m",n:"Pork souvla-style bites, potatoes & salad",min:45,act:15,oven:1,cy:1,ing:[["pork",160],["potatoes",250],["tomatoes",100],["cucumber",80],["lemons",10],["oil",10]],steps:["Marinate the pork with oregano, salt, lemon and a little oil.","Roast the potato wedges at 200 °C for 35 minutes. Add the pork for the last 20–25 minutes.","Serve with a tomato and cucumber salad."],keep:"Cooked pork keeps 3 days."},
+{id:"m10",t:"m",n:"Chicken & pepper stir-fry with rice",min:25,act:20,ing:[["thigh",150],["rice",80],["peppers",100],["onions",50],["frozveg",100],["oil",10]],steps:["Cook the rice.","Slice the chicken thinly and stir-fry it in hot oil for 5 minutes.","Add the peppers, onion and frozen veg and cook for 5 minutes more. Season with paprika, salt and pepper."],keep:"Eat the rice within 1 day."},
+{id:"m11",t:"m",n:"Bean chili with rice",min:30,act:10,ing:[["beans",240],["cantomato",200],["onions",60],["peppers",80],["rice",70],["garlic",5],["oil",8]],steps:["Soften the onion, pepper and garlic in the oil with cumin, paprika and chili.","Add the drained beans and tomatoes and simmer for 15–20 minutes.","Serve over rice."],keep:"Chili keeps 3 days or freezes for 3 months."},
+{id:"m12",t:"m",n:"Egg fried rice with veg",min:15,act:15,ing:[["rice",80],["eggs",120],["frozveg",150],["oil",10]],steps:["Use cold cooked rice if you have it. Otherwise cook it and spread it out to cool.","Stir-fry the frozen veg in hot oil for 3 minutes. Push it aside and scramble the eggs.","Add the rice and stir-fry for 3 minutes with garlic powder, salt and pepper."],keep:"Eat within 1 day. Reheat until steaming hot."},
+{id:"m13",t:"m",n:"Tuna wrap with yogurt dressing",min:10,act:10,ing:[["wraps",120],["tuna",112],["yogurt",50,1],["lettuce",50],["tomatoes",80]],steps:["Mix the drained tuna with yogurt, lemon, salt and pepper.","Fill two wraps with the tuna, lettuce and tomato."],keep:"Make the filling ahead. Keeps 2 days in a sealed tub."},
+{id:"m14",t:"m",n:"Halloumi & vegetable pourgouri bowl",min:25,act:20,cy:1,ing:[["bulgur",80],["halloumi",70],["zucchini",120],["peppers",80],["oil",8]],steps:["Cook the bulgur in 2× its volume of salted water for 12 minutes.","Pan-fry the chopped courgette and pepper in the oil until soft.","Fry the halloumi slices until golden and serve everything together with lemon."],keep:"Bulgur and veg keep 3 days. Fry the halloumi fresh."},
+{id:"m15",t:"m",n:"Sardines on toast with village salad",min:10,act:10,ing:[["bread",100],["sardines",90],["tomatoes",120],["cucumber",100],["lemons",10],["oil",5]],steps:["Toast the bread and mash the sardines on top with lemon.","Chop the tomato and cucumber, then dress with oil, oregano and salt."],keep:"Make fresh. Unopened cans keep for years."},
+{id:"m16",t:"m",n:"Chicken thigh & potato tray bake",min:50,act:10,oven:1,ing:[["thigh",180],["potatoes",300],["onions",60],["peppers",80],["oil",12]],steps:["Chop the potatoes, onion and pepper and toss with oil, oregano, paprika and salt.","Add the chicken thighs on top.","Roast at 200 °C for 40–45 minutes until the chicken is cooked through and the potatoes are crisp."],keep:"Keeps 3 days in the fridge."},
+{id:"m17",t:"m",n:"Moujendra (lentils & rice) with yogurt",min:40,act:20,cy:1,ing:[["lentils",70],["rice",50],["onions",100],["oil",12],["yogurt",100,1]],steps:["Boil the lentils for 15 minutes.","Meanwhile, slowly fry the sliced onions in the oil for 15–20 minutes until deep brown.","Add the rice, half the onions and enough water to cover. Simmer for 15 minutes.","Top with the rest of the onions and serve with yogurt."],keep:"Keeps 2 days. Cool the rice quickly."},
+{id:"m18",t:"m",n:"Tofu & vegetable stir-fry with rice",min:20,act:15,ing:[["tofu",150],["rice",80],["frozveg",150],["oil",10]],steps:["Cook the rice.","Pat the tofu dry, cube it and fry in hot oil until golden, about 6 minutes.","Add the frozen veg, garlic powder, salt and pepper and stir-fry for 5 minutes."],keep:"Eat the rice within 1 day."},
+{id:"m19",t:"m",n:"Potato omelette with salad",min:25,act:20,cy:1,ing:[["eggs",180],["potatoes",200],["onions",40],["oil",10],["lettuce",60],["tomatoes",80]],steps:["Fry the thinly sliced potatoes and onion in the oil on medium heat until soft, about 12 minutes.","Pour over the whisked eggs and cook on low with a lid until set.","Serve with lettuce and tomato."],keep:"Keeps 2 days. Good cold."},
+{id:"m20",t:"m",n:"Chicken & cheese quesadillas",min:20,act:20,ing:[["wraps",120],["chicken",120],["cheese",25],["peppers",60],["onions",30],["oil",5]],steps:["Slice the chicken and fry it with the pepper and onion for 8 minutes.","Fill the wraps with the chicken mix and cheese, then fold in half.","Toast in a dry pan for 2 minutes per side."],keep:"Filling keeps 2 days. Toast fresh."},
+{id:"s1",t:"s",n:"Banana",min:0,act:0,fruit:1,ing:[["bananas",120]],steps:["Peel and eat."],keep:"Keep at room temperature."},
+{id:"s2",t:"s",n:"Apple",min:0,act:0,fruit:1,ing:[["apples",170]],steps:["Wash and eat."],keep:"Keeps 2 weeks in the fridge."},
+{id:"s3",t:"s",n:"Orange",min:0,act:0,fruit:1,ing:[["oranges",180]],steps:["Peel and eat. Cyprus oranges are in season over the winter."],keep:"Keeps 1–2 weeks."},
+{id:"s4",t:"s",n:"Strained yogurt with honey",min:2,act:2,ing:[["yogurt",170],["honey",10]],steps:["Spoon the yogurt into a bowl and drizzle with honey."],keep:"Opened tub keeps 5 days."},
+{id:"s5",t:"s",n:"Handful of almonds",min:0,act:0,ing:[["almonds",30]],steps:["About 22 almonds. Portion them into small bags."],keep:"Keeps for months in a sealed jar."},
+{id:"s6",t:"s",n:"Two boiled eggs",min:10,act:2,ing:[["eggs",120]],steps:["Boil the eggs for 9 minutes, then cool them in cold water.","Boil a batch at once for the week."],keep:"They keep 5 days in the fridge."},
+{id:"s7",t:"s",n:"Rice cakes with peanut butter",min:2,act:2,ing:[["ricecakes",20],["pb",15]],steps:["Spread the peanut butter on two rice cakes."],keep:"Close the bag tightly so they stay crisp."},
+{id:"s8",t:"s",n:"Hummus & carrot sticks",min:5,act:5,ing:[["hummus",60],["carrots",100]],steps:["Cut the carrots into sticks and dip them in the hummus."],keep:"Cut carrots keep 4 days in water in the fridge."},
+{id:"s9",t:"s",n:"Glass of milk & a banana",min:0,act:0,fruit:1,ing:[["milk",300],["bananas",120]],steps:["Easy calories after training. Blend them together for a shake."],keep:"Drink within the milk's use-by date."},
+{id:"s10",t:"s",n:"Cottage cheese with berries",min:2,act:2,fruit:1,ing:[["cottage",150],["berries",80]],steps:["Top the cottage cheese with berries, thawed overnight in the fridge."],keep:"Opened tub keeps 3 days."},
+{id:"s11",t:"s",n:"Apple with peanut butter",min:2,act:2,fruit:1,ing:[["apples",170],["pb",15]],steps:["Slice the apple and dip it in the peanut butter."],keep:"Make fresh."}
+];
+const MEAL={};MEALS.forEach(m=>MEAL[m.id]=m);
+/* ---------------------------- helpers ---------------------------- */
+const $=s=>document.querySelector(s);
+const SAMPLE=!document.getElementById("pf");
+const SAMPLE_OPTS={budget:50,store:"cy",trips:1,haveOil:true,buffer:true,goal:"bulk",sex:"m",w:72,h:178,a:20,act:1.55,kcal:null,diet:"all",snacks:2,variety:"med",time:"any",kitchen:"oven",allergens:[],dislikes:[]};
+const SAMPLE_SEED=4;
+const curStore=()=>"cy";
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const eur=n=>"€"+(Math.round(n*100)/100).toFixed(2);
+const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+function rngFrom(seed){let a=seed>>>0;return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function shuffled(arr,r){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function flash(t){const el=$("#toast");el.textContent=t;el.classList.add("on");clearTimeout(flash.t);flash.t=setTimeout(()=>el.classList.remove("on"),3200)}
+function copyText(text,msg){const done=()=>flash(msg||"Copied");const fb=()=>{const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");done()}catch(e){flash("Select the text and copy it manually")}ta.remove()};if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(text).then(done).catch(fb);else fb()}
+document.querySelectorAll("[data-copy]").forEach(b=>b.addEventListener("click",()=>copyText($(b.dataset.copy).textContent.trim())));
+function plural(n,u){return n===1?u:(u==="clove"?"cloves":u+"s")}
+function fmtQty(id,g){
+const x=I[id];
+if(id==="oil"){const t=Math.max(0.5,Math.round(g/13*2)/2);return `${t} tbsp olive oil`}
+if(x.ug){const n=Math.max(0.5,Math.round(g/x.ug*2)/2);return `${n} ${plural(n,x.un)}${id==="garlic"?" garlic":""}`}
+const v=g<30?Math.round(g):Math.round(g/5)*5;
+return `${v} ${x.fl.includes("L")?"ml":"g"} ${x.n.toLowerCase()}`;
+}
+function useQty(id,g){const x=I[id];if(x.ug){const n=Math.max(1,Math.round(g/x.ug));return `${n} ${plural(n,x.un)}`}return `${Math.round(g/10)*10||Math.round(g)} ${x.fl.includes("L")?"ml":"g"}`}
+function priceInfo(id,st){const c=CHECKED[id]&&CHECKED[id][st];return c?{p:c.p,chk:c.d}:{p:I[id].price*STORES[st].m,chk:null}}
+function price(id,st){return priceInfo(id,st).p}
+function nut(ing,scale){let k=0,p=0;for(const [id,g] of ing){k+=I[id].kcal*g/100*scale;p+=I[id].p*g/100*scale}return{k,p}}
+/* portion groups: P = protein foods (sized to hit the protein target),
+C = carbs & energy foods (sized to hit calories), O = veg, fruit, sauces (kept near normal) */
+const GRP={};
+["eggs","milk","soymilk","yogurt","halloumi","feta","cottage","cheese","tofu","turkey","chicken","thigh","mince","pork","hake","tuna","sardines","lentils","chickpeas","beans","hummus"].forEach(i=>GRP[i]="P");
+["rice","pasta","bulgur","oats","bread","pitta","wraps","potatoes","ricecakes","honey","pb","almonds","tahini","oil"].forEach(i=>GRP[i]="C");
+const grp=id=>GRP[id]||"O";
+function sIng(ing,S){return ing.map(([id,g])=>[id,g*S[grp(id)]])}
+function servingCost(ing,st){let c=0;for(const [id,g] of ing)c+=g/I[id].pack*price(id,st);return c}
+/* ---------------------------- options ---------------------------- */
+const ALLERGENS=[["D","Dairy"],["E","Eggs"],["F","Fish"],["N","Nuts & peanuts"],["G","Gluten"],["S","Sesame"],["Y","Soy"]];
+const DISLIKE_IDS=["tuna","sardines","hake","chicken","thigh","mince","pork","tofu","lentils","chickpeas","beans","halloumi","feta","cottage","bulgur","pb","spinach","zucchini","oats","hummus"];
+if(!SAMPLE){
+$("#allergyChips").innerHTML=ALLERGENS.map(([f,l])=>`<input type="checkbox" id="al_${f}" value="${f}"><label for="al_${f}">${l}</label>`).join("");
+$("#dislikeChips").innerHTML=DISLIKE_IDS.map(id=>`<input type="checkbox" id="dl_${id}" value="${id}"><label for="dl_${id}">${esc(I[id].n.replace(/ \(.*\)/,""))}</label>`).join("");
+document.querySelectorAll("#quickBudget button").forEach(b=>b.addEventListener("click",()=>{$("#fBudget").value=b.dataset.b;updateBodySum()}));
+}
+const clampNum=(v,lo,hi,d)=>{v=parseFloat(v);return isFinite(v)?Math.min(hi,Math.max(lo,v)):d};
+function readOpts(){
+const kc=parseFloat($("#fKcal").value);
+return {
+budget:Math.max(0,parseFloat($("#fBudget").value)||0),
+store:"cy",
+trips:+document.querySelector('input[name="trips"]:checked').value,
+haveOil:$("#fOil").checked, buffer:$("#fBuffer").checked,
+goal:document.querySelector('input[name="goal"]:checked').value,
+sex:$("#fSex").value, w:clampNum($("#fW").value,40,160,72), h:clampNum($("#fH").value,140,210,178), a:parseFloat($("#fA").value)||20, act:+$("#fAct").value,
+kcal:isFinite(kc)&&kc>0?kc:null,
+diet:$("#fDiet").value, snacks:+$("#fSnacks").value, variety:$("#fVar").value, time:$("#fTime").value, kitchen:$("#fKitchen").value,
+allergens:[...document.querySelectorAll("#allergyChips input:checked")].map(x=>x.value),
+dislikes:[...document.querySelectorAll("#dislikeChips input:checked")].map(x=>x.value)
+};
+}
+function writeOpts(o){
+if(!o)return;
+const set=(s,v)=>{const el=$(s);if(el&&v!=null)el.value=v};
+set("#fBudget",o.budget);set("#fSex",o.sex);set("#fW",o.w);set("#fH",o.h);set("#fA",o.a);set("#fAct",o.act);
+set("#fDiet",o.diet);set("#fSnacks",o.snacks);set("#fVar",o.variety);set("#fTime",o.time);set("#fKitchen",o.kitchen);
+$("#fKcal").value=o.kcal||"";
+const tr=$("#tr"+o.trips);if(tr)tr.checked=true;
+const g={cut:"#gCut",maintain:"#gMain",bulk:"#gBulk"}[o.goal];if(g)$(g).checked=true;
+$("#fOil").checked=!!o.haveOil;$("#fBuffer").checked=!!o.buffer;
+document.querySelectorAll("#allergyChips input,#dislikeChips input").forEach(x=>x.checked=false);
+(o.allergens||[]).forEach(f=>{const el=$("#al_"+f);if(el)el.checked=true});
+(o.dislikes||[]).forEach(f=>{const el=$("#dl_"+f);if(el)el.checked=true});
+}
+function updateBodySum(){if(SAMPLE)return;const o=readOpts();$("#bodySum").textContent=`${o.sex==="m"?"Male":"Female"} · ${o.w} kg · ${o.h} cm · ${o.a} yrs${o.kcal?" · "+o.kcal+" kcal":""}`}
+if(!SAMPLE)document.querySelectorAll("#bodyBox input,#bodyBox select").forEach(x=>x.addEventListener("input",updateBodySum));
+function targets(o){
+const bmr=10*o.w+6.25*o.h-5*o.a+(o.sex==="m"?5:-161);
+const tdee=bmr*o.act;
+let kcal,own=false,floored=false;
+if(o.kcal){kcal=Math.min(5000,Math.max(1200,o.kcal));own=true}
+else{
+kcal=tdee*{cut:0.85,maintain:1,bulk:1.1}[o.goal];
+// we don't automatically go below ~10% above estimated resting needs
+if(o.goal==="cut"&&kcal<bmr*1.1){kcal=bmr*1.1;floored=true}
+kcal=Math.round(kcal/50)*50;
+}
+const p=Math.round(o.w*{cut:2.0,maintain:1.6,bulk:1.8}[o.goal]);
+return {bmr,tdee,kcal,p,own,floored};
+}
+function banned(id,o){
+const f=I[id].fl;
+if(o.dislikes.includes(id))return true;
+if(o.diet==="nopork"&&f.includes("P"))return true;
+if(o.diet==="pesc"&&/[CBP]/.test(f))return true;
+if(o.diet==="veg"&&/[CBPF]/.test(f))return true;
+for(const a of o.allergens)if(f.includes(a))return true;
+return false;
+}
+function resolve(m,o){
+if(o.kitchen==="hob"&&m.oven)return null;
+const out=[];
+for(const [id,g,opt] of m.ing){
+let use=id;
+if(banned(id,o)){
+const sw=SWAP[id];
+if(sw&&!banned(sw,o))use=sw;
+else if(opt)continue;
+else return null;
+}
+out.push([use,g]);
+}
+return {...m,ing:out};
+}
+function pools(o){
+const B=MEALS.filter(m=>m.t==="b").map(m=>resolve(m,o)).filter(Boolean);
+let M=MEALS.filter(m=>m.t==="m").map(m=>resolve(m,o)).filter(Boolean);
+if(o.time==="quick")M=M.filter(m=>m.min<=20);
+const S=MEALS.filter(m=>m.t==="s").map(m=>resolve(m,o)).filter(Boolean);
+const Q=M.filter(m=>m.min<=15);
+return {B,M,S,Q:Q.length?Q:M};
+}
+/* ---------------------------- planner ---------------------------- */
+const VAR={low:{b:2,m:3,s:2},med:{b:3,m:4,s:3},high:{b:4,m:5,s:4}};
+function isFreshProtein(m){return m.ing.some(([id])=>{const f=I[id].fl;return f.includes("f")&&/[CBP]/.test(f)})}
+function evaluate(c,o,T){
+const mains=c.mains.slice().sort((a,b)=>isFreshProtein(b)-isFreshProtein(a));
+const cooks=[];
+for(let d=0;d<7;d++)cooks.push({day:d,meal:mains[d%mains.length],serv:d<6?2:1,slot:"dinner"});
+const qcook={day:0,meal:c.quick,serv:1,slot:"lunch"};
+const snackAvg=c.snacks.length?c.snacks.reduce((s,m)=>s+nut(m.ing,1).k,0)/c.snacks.length:0;
+const snackK=o.snacks*7*snackAvg;
+const snackP=c.snacks.length?o.snacks*7*c.snacks.reduce((s,m)=>s+nut(m.ing,1).p,0)/c.snacks.length:0;
+const acc={P:{k:0,p:0},C:{k:0,p:0},O:{k:0,p:0}};
+const addBase=(ing,mult)=>{for(const [id,g] of ing){const a=acc[grp(id)];a.k+=I[id].kcal*g/100*mult;a.p+=I[id].p*g/100*mult}};
+for(let d=0;d<7;d++)addBase(c.breakfasts[d%c.breakfasts.length].ing,1);
+for(const ck of [...cooks,qcook])addBase(ck.meal.ing,ck.serv);
+const needK=T.kcal*7-snackK,needP=T.p*7-snackP;
+const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+const baseK=acc.P.k+acc.C.k+acc.O.k;
+const scale=clamp(needK/baseK,0.6,2.2);
+const S={P:scale,C:scale,O:clamp(scale,0.8,1.25)};
+for(let it=0;it<8;it++){
+if(acc.P.p>0)S.P=clamp((needP-acc.C.p*S.C-acc.O.p*S.O)/acc.P.p,0.6,1.8);
+if(acc.C.k>0)S.C=clamp((needK-acc.P.k*S.P-acc.O.k*S.O)/acc.C.k,0.4,2.4);
+}
+const tot=acc.P.k*S.P+acc.C.k*S.C+acc.O.k*S.O;
+if(tot>0){const f=clamp(needK/tot,0.8,1.4);S.P*=f;S.C*=f;S.O*=f}
+const use=[{},{}];
+const tripOf=d=>(o.trips===2&&d>=3)?1:0;
+const add=(d,id,g)=>{if(o.haveOil&&id==="oil")return;const t=I[id].fl.includes("f")?tripOf(d):0;use[t][id]=(use[t][id]||0)+g};
+for(const ck of [...cooks,qcook])for(const [id,g] of sIng(ck.meal.ing,S))add(ck.day,id,g*ck.serv);
+const plan=[];let pSum=0,kSum=0;
+for(let d=0;d<7;d++){
+const b=c.breakfasts[d%c.breakfasts.length];
+for(const [id,g] of sIng(b.ing,S))add(d,id,g);
+const sn=[];
+for(let j=0;j<o.snacks;j++){const s=c.snacks[(d*o.snacks+j)%c.snacks.length];sn.push(s);for(const [id,g] of s.ing)add(d,id,g)}
+const lunch=d===0?c.quick:cooks[d-1].meal;
+const dinner=cooks[d].meal;
+let k=0,p=0;
+for(const m of [b,lunch,dinner]){const n=nut(sIng(m.ing,S),1);k+=n.k;p+=n.p}
+for(const s of sn){const n=nut(s.ing,1);k+=n.k;p+=n.p}
+kSum+=k;pSum+=p;
+plan.push({d,b,lunch,lunchFrom:d>0?d:null,dinner,dinnerServ:cooks[d].serv,snacks:sn,k,p});
+}
+let cost=0,eaten=0,anyEst=false;const lists=[[],[]];
+use.forEach((u,t)=>{for(const id in u){const g=u[id];const pi=priceInfo(id,o.store);const packs=Math.max(1,Math.ceil(g/I[id].pack-0.05));const pr=packs*pi.p;cost+=pr;eaten+=Math.min(g,packs*I[id].pack)/I[id].pack*pi.p;if(!pi.chk)anyEst=true;lists[t].push({id,g,packs,pr,chk:pi.chk})}});
+return {c,cooks,qcook,plan,lists,cost,eaten,anyEst,avgK:kSum/7,avgP:pSum/7,scale,S};
+}
+function capOf(o){return o.budget*(o.buffer?0.95:1)}
+function search(o,seed){
+const T=targets(o);
+if(o.a<18)return {error:"minor",T,o};
+const P=pools(o);
+if(P.B.length<1||P.M.length<2||(o.snacks>0&&P.S.length<1))return {error:"filters",T,o,P};
+const r=rngFrom(seed);
+const V=VAR[o.variety];
+const nb=Math.min(P.B.length,V.b),nm=Math.min(P.M.length,V.m),ns=Math.min(P.S.length,V.s);
+const fruits=P.S.filter(s=>s.fruit);
+const cap=capOf(o);
+let best=null,cheapest=null;
+// mode "variety": any plan under budget is fine, spend headroom on variety.
+// mode "cheap": only used when variety mode finds nothing that fits.
+for(const mode of ["variety","cheap"]){
+for(let start=0;start<24;start++){
+const jit={};[...P.B,...P.M,...P.S].forEach(m=>jit[m.id]=r()*(mode==="variety"?4:1.6));
+const sumJ=ev=>{const all=[...ev.c.breakfasts,...ev.c.mains,...ev.c.snacks];return all.reduce((s,m)=>s+jit[m.id],0)+(ev.c.mains.some(m=>m.id===ev.c.quick.id)?3:0)};
+const obj=mode==="variety"
+?ev=>ev.cost*0.15+Math.max(0,ev.cost-cap)*6+Math.max(0,T.p-ev.avgP)*0.3+sumJ(ev)
+:ev=>ev.cost+Math.max(0,T.p-ev.avgP)*0.3+sumJ(ev)*0.4;
+let cand={breakfasts:shuffled(P.B,r).slice(0,nb),mains:shuffled(P.M,r).slice(0,nm),quick:P.Q[Math.floor(r()*P.Q.length)],snacks:o.snacks>0?shuffled(P.S,r).slice(0,ns):[]};
+if(cand.snacks.length&&fruits.length&&!cand.snacks.some(s=>s.fruit))cand.snacks[0]=fruits[Math.floor(r()*fruits.length)];
+let ev=evaluate(cand,o,T),ov=obj(ev);
+for(let pass=0;pass<4;pass++){
+let improved=false;
+for(const [key,pool] of [["mains",P.M],["breakfasts",P.B],["snacks",P.S],["quick",P.Q]]){
+const n=key==="quick"?1:cand[key].length;
+for(let i=0;i<n;i++)for(const alt of pool){
+if(key==="quick"?alt.id===cand.quick.id:cand[key].some(m=>m.id===alt.id))continue;
+const nc={...cand,[key]:key==="quick"?alt:cand[key].map((m,j)=>j===i?alt:m)};
+if(key==="snacks"&&fruits.length&&!nc.snacks.some(s=>s.fruit))continue;
+const e2=evaluate(nc,o,T),o2=obj(e2);
+if(o2<ov-0.01){cand=nc;ev=e2;ov=o2;improved=true}
+}
+}
+if(!improved)break;
+}
+if(!cheapest||ev.cost<cheapest.cost)cheapest=ev;
+if(ev.cost<=cap){
+ev.score=Math.min(1,ev.avgP/T.p)*100+(mode==="variety"?r()*8:-(ev.cost/Math.max(cap,1))*6+r()*3);
+if(!best||ev.score>best.score)best=ev;
+}
+}
+if(best)break;
+}
+if(best)return {...best,T,o,cap};
+return {error:"budget",T,o,cap,fullCost:cheapest?cheapest.cost:0};
+}
+const idsOf=c=>({b:c.breakfasts.map(m=>m.id),m:c.mains.map(m=>m.id),q:c.quick.id,s:c.snacks.map(m=>m.id)});
+function fromIds(ids,o){
+const R=id=>MEAL[id]?resolve(MEAL[id],o):null;
+const c={breakfasts:ids.b.map(R),mains:ids.m.map(R),quick:R(ids.q),snacks:ids.s.map(R)};
+if([...c.breakfasts,...c.mains,c.quick,...c.snacks].some(x=>!x))return null;
+return c;
+}
+/* ---------------------------- render ---------------------------- */
+const GOALTXT={cut:"losing fat",maintain:"maintaining",bulk:"building muscle"};
+let CUR=null;let swapTried={};
+function storeTotal(lists,st){let t=0;lists.forEach(l=>l.forEach(x=>t+=x.packs*price(x.id,st)));return t}
+function renderError(res){
+const el=$("#result"),o=res.o,T=res.T,st=STORES[o.store].n;
+if(res.error==="minor"){el.innerHTML=`<div class="alert"><strong>This planner is for adults (18+).</strong><p>Teenagers are still growing, so automatic calorie targets aren't suitable. Please talk to a parent, your doctor or a registered dietitian about how much to eat. You can still browse the meals below.</p></div>`;return}
+if(res.error==="filters"){const P=res.P;el.innerHTML=`<div class="alert"><strong>No plan can be made with these filters.</strong><p>Only ${P.B.length} breakfast${P.B.length===1?"":"s"}, ${P.M.length} lunch or dinner recipe${P.M.length===1?"":"s"} and ${P.S.length} snack${P.S.length===1?"":"s"} match your allergies, diet, dislikes, kitchen and cooking time. The planner needs at least 1 breakfast and 2 mains. Try removing some disliked foods, allowing longer cooking times, or choosing "Hob and oven".</p></div>`;return}
+const need=Math.ceil(res.fullCost/(o.buffer?0.95:1));
+const fixes=[];
+fixes.push(`<button class="btn small" type="button" data-fix="budget" data-v="${need}">Set my budget to €${need}</button>`);
+if(o.variety!=="low")fixes.push(`<button class="btn small ghost" type="button" data-fix="variety">Use low variety (cheaper)</button>`);
+if(o.buffer)fixes.push(`<button class="btn small ghost" type="button" data-fix="buffer">Don't keep 5% spare</button>`);
+el.innerHTML=`<div class="alert"><strong>€${o.budget} can't cover your full week.</strong>
+<p>For ${GOALTXT[o.goal]} you need about ${T.kcal} kcal and ${T.p} g protein a day. The cheapest full week we found costs about <b class="mono">${eur(res.fullCost)}</b> at estimated prices${o.buffer?", plus your 5% spare":""}. We won't give you a plan with less food than your target just to fit the budget. Try one of these:</p>
+<div class="row">${fixes.join("")}</div>
+<p class="muted">If you really can't spend more, setting your own lower calorie target under "About you" is your choice to make. Eating too little for long periods can affect your health and training.</p></div>`;
+el.querySelectorAll("[data-fix]").forEach(b=>b.addEventListener("click",()=>{
+const f=b.dataset.fix;
+if(f==="budget")$("#fBudget").value=b.dataset.v;
+if(f==="variety")$("#fVar").value="low";
+if(f==="buffer")$("#fBuffer").checked=false;
+if(f==="snacks")$("#fVar").value="low";
+run(true);
+}));
+}
+function render(res){
+if(res.error){CUR=null;renderError(res);return}
+CUR=res;
+if(!SAMPLE)store.set("ggg.plan",{o:res.o,ids:idsOf(res.c)});
+const el=$("#result"),o=res.o,T=res.T,st=STORES[o.store].n;
+const left=o.budget-res.cost;
+const pct=Math.min(100,res.cost/o.budget*100);
+const lo=res.cost*0.9,hi=res.cost*1.1;
+const conf=`<span class="conf est">Ballpark prices</span>`;
+const weekAct=[...res.cooks,res.qcook].reduce((s,c)=>s+c.meal.act,0)+res.plan.reduce((s,p)=>s+p.b.act,0);
+const weekTot=[...res.cooks,res.qcook].reduce((s,c)=>s+c.meal.min,0)+res.plan.reduce((s,p)=>s+p.b.min,0);
+let goalNote="";
+if(res.avgP<T.p*0.9)goalNote=`<div class="alert">Protein comes to about ${Math.round(res.avgP)} g a day, under your ${T.p} g target. More budget, or allowing eggs, fish or dairy, would raise it.</div>`;
+if(T.floored)goalNote+=`<div class="alert">We didn't set your target lower than ${T.kcal} kcal, which is about 10% above your estimated resting needs. That isn't a guaranteed safe minimum. Bodies differ, so watch how you feel and train.</div>`;
+const tripLabel=t=>o.trips===1?"Shopping list · Day 1":(t===0?"Trip 1 · Day 1 (big shop)":"Trip 2 · Day 4 (fresh top-up)");
+const tripsHtml=res.lists.map((l,t)=>{
+if(!l.length)return "";
+const tot=l.reduce((s,x)=>s+x.pr,0);
+const by=CATS.map(cat=>{const items=l.filter(x=>I[x.id].cat===cat).sort((a,b)=>I[a.id].n.localeCompare(I[b.id].n));if(!items.length)return "";
+return `<div class="cat">${cat}</div>`+items.map(x=>{const cid=`g${t}_${x.id}`;return `<label class="gi" for="${cid}"><input type="checkbox" id="${cid}"><span class="nm">${esc(I[x.id].n)} <b>${x.packs} × ${esc(I[x.id].pl)}</b><small>you'll use about ${useQty(x.id,x.g)}</small></span><span class="pr">${eur(x.pr)}<small>${x.chk?"checked "+esc(x.chk):"ballpark"}</small></span></label>`}).join("")}).join("");
+return `<div class="trip"><h3>${tripLabel(t)} <span class="mono">${eur(tot)}</span></h3>${by}</div>`}).join("");
+const daysHtml=res.plan.map(p=>`<div class="day"><h4>Day ${p.d+1}${(p.d===0||(o.trips===2&&p.d===3))?"<small>shop day</small>":""}</h4>
+<div class="slot"><span class="lab">Breakfast</span>${esc(p.b.n)}</div>
+<div class="slot"><span class="lab">Lunch</span><span>${esc(p.lunch.n)}</span>${p.lunchFrom?`<span class="from">↳ leftovers from Day ${p.lunchFrom} dinner</span>`:`<span class="from">↳ quick, make fresh</span>`}</div>
+<div class="slot"><span class="lab">Dinner</span><span>${esc(p.dinner.n)}</span><span class="from">${p.dinnerServ>1?"↳ cook 2 portions, 1 for tomorrow's lunch":"↳ cook 1 portion"}</span></div>
+${p.snacks.length?`<div class="slot"><span class="lab">Snacks</span>${p.snacks.map(s=>esc(s.n)).join(" · ")}</div>`:""}
+<div class="daynut">${Math.round(p.k)} kcal · ${Math.round(p.p)} g protein</div></div>`).join("");
+// prep schedule
+const sched=[];
+for(let d=0;d<7;d++){
+const items=[];
+if(d===0||(o.trips===2&&d===3))items.push(d===0?"Go shopping.":"Fresh top-up shop.");
+if(o.trips===1&&d===0){
+const late=res.cooks.filter(c=>c.day>=3&&isFreshProtein(c.meal));
+if(late.length)items.push(`Freeze the meat for ${[...new Set(late.map(c=>"Day "+(c.day+1)))].join(" and ")} today. Thaw it in the fridge the night before.`);
+if(res.lists[0].some(x=>["bread","pitta"].includes(x.id)))items.push("Freeze half the bread or pittas and toast them from frozen.");
+}
+if(d===0&&res.c.snacks.some(s=>s.id==="s6"))items.push("Boil a batch of eggs for the week's snacks.");
+const ck=res.cooks[d];
+if(d===0)items.push(`Lunch: make ${esc(res.qcook.meal.n)} (${res.qcook.meal.act} min hands-on).`);
+items.push(`Dinner: cook ${esc(ck.meal.n)} × ${ck.serv} portion${ck.serv>1?"s":""} (${ck.meal.act} min hands-on, ${ck.meal.min} min total). ${ck.serv>1?"Put one portion in a tub for tomorrow.":""}`);
+const next=res.cooks[d+1];
+if(next&&next.meal.soak)items.push(`Tonight: soak the chickpeas for tomorrow.`);
+if(d===0&&res.cooks[0].meal.soak)items.unshift("Day 1's stew needs chickpeas soaked the night before you shop, or buy a can of chickpeas instead.");
+if(res.plan[d+1]&&res.plan[d+1].b.id==="b1")items.push("Tonight: make overnight oats for tomorrow.");
+sched.push(`<li><b class="d">Day ${d+1}</b><div>${items.join(" ")}</div></li>`);
+}
+// recipes
+const uniq=[];const seen=new Set();
+const pushU=(m,kind,key,idx)=>{if(!seen.has(m.id)){seen.add(m.id);uniq.push({m,kind,key,idx})}};
+res.c.breakfasts.forEach((m,i)=>pushU(m,"Breakfast","breakfasts",i));
+pushU(res.c.quick,"Quick lunch","quick",0);
+res.c.mains.forEach((m,i)=>pushU(m,"Dinner + next day's lunch","mains",i));
+res.c.snacks.forEach((m,i)=>pushU(m,"Snack","snacks",i));
+const recHtml=uniq.map(({m,kind,key,idx})=>{
+const ingS=m.t==="s"?m.ing:sIng(m.ing,res.S);
+const n=nut(ingS,1);
+const cookDays=[...res.cooks,res.qcook].filter(c=>c.meal.id===m.id).map(c=>`Day ${c.day+1} ${c.slot} (${c.serv} portion${c.serv>1?"s":""})`);
+const eatDays=m.t==="b"?res.plan.filter(p=>p.b.id===m.id).map(p=>"Day "+(p.d+1)):[];
+return `<details class="rec"><summary>${esc(m.n)}</summary><div class="dbody">
+<div class="meta"><span>${kind}</span><span>${m.act} min hands-on${m.min>m.act?` · ${m.min} min total`:""}</span><span>${Math.round(n.k)} kcal</span><span>${Math.round(n.p)} g protein</span><span>${eur(servingCost(ingS,o.store))} / portion</span></div>
+${cookDays.length?`<p><b>Cook:</b> ${cookDays.join(", ")}</p>`:""}${eatDays.length?`<p><b>Eat:</b> ${eatDays.join(", ")}</p>`:""}
+<div class="twocol"><div><b>Per portion</b><ul>${ingS.map(([id,g])=>`<li>${fmtQty(id,g)}</li>`).join("")}</ul></div>
+<div><b>Method</b><ol>${m.steps.map(s=>`<li>${esc(s)}</li>`).join("")}</ol><p class="muted">${esc(m.keep)}</p></div></div>
+${SAMPLE?"":`<div><button class="btn small ghost" type="button" data-swap="${key}" data-idx="${idx}">Swap this meal</button></div>`}</div></details>`}).join("");
+const leftovers=[];res.lists.forEach(l=>l.forEach(x=>{const rem=x.packs*I[x.id].pack-x.g;if(rem/I[x.id].pack>0.2&&!I[x.id].fl.includes("f"))leftovers.push(`${I[x.id].n}: about ${I[x.id].ug?Math.floor(rem/I[x.id].ug)+" "+plural(Math.floor(rem/I[x.id].ug),I[x.id].un):Math.round(rem/10)*10+(I[x.id].fl.includes("L")?" ml":" g")}`)}));
+const spices="salt, pepper, oregano, paprika, cumin, cinnamon, garlic powder";
+el.innerHTML=`
+<div class="rhead"><span class="eyebrow">1 · Can I afford it?</span></div>
+<div class="summary">
+<div class="sbox key"><span class="k">Ballpark checkout total</span><span class="v">${eur(res.cost)}</span><div class="meter"><span style="width:${pct}%"></span></div><span class="s">of your €${o.budget} · ${eur(left)} left</span></div>
+<div class="sbox"><span class="k">Food you'll eat this week</span><span class="v">${eur(res.eaten)}</span><span class="s">The other ${eur(res.cost-res.eaten)} is food left in packs for next week</span></div>
+<div class="sbox"><span class="k">Ballpark range at the till</span><span class="v" style="font-size:1.15rem">${eur(lo)}–${eur(hi)}</span><span class="s">Prices vary by about ±10%</span></div>
+</div>
+<div class="alert" style="gap:6px"><div class="row">${conf}</div><p style="font-size:.95rem">These are typical Cyprus supermarket prices, not live prices from any store. Your total at the till will be different. Offers, brands and the shop you choose all change it, so treat the total as a guide and keep a little money spare.</p></div>
+<div class="rhead"><span class="eyebrow">2 · Does it fit my goal?</span></div>
+<div class="summary">
+<div class="sbox"><span class="k">Calories / day</span><span class="v">${Math.round(res.avgK)}</span><span class="s">${T.own?"your own target":"estimated target"} ${T.kcal} for ${GOALTXT[o.goal]}</span></div>
+<div class="sbox"><span class="k">Protein / day</span><span class="v">${Math.round(res.avgP)} g</span><span class="s">target ${T.p} g (${(T.p/o.w).toFixed(1)} g per kg)</span></div>
+<div class="sbox"><span class="k">Cooking this week</span><span class="v">${Math.round(weekAct/60*10)/10} h</span><span class="s">hands-on · ${Math.round(weekTot/60*10)/10} h total incl. simmering and oven time</span></div>
+</div>
+${goalNote}
+<div class="rhead"><span class="eyebrow">3 · What do I buy?</span></div>
+<div class="trips">${tripsHtml}</div>
+${o.haveOil?`<p class="muted">From your cupboard: olive oil, ${spices}.</p>`:`<p class="muted">You'll also need ${spices}. If you don't have them, a few basics cost about €3–5 and last for months.</p>`}
+${SAMPLE?"":`<div class="btns"><button class="btn small" type="button" id="copyList">Copy shopping list</button><button class="btn small ghost" type="button" id="copyAll">Copy whole plan</button><button class="btn small ghost" type="button" id="reshuffle">Try different meals</button></div>`}
+<div class="rhead"><span class="eyebrow">4 · What do I eat?</span></div>
+<div class="days">${daysHtml}</div>
+<div class="rhead"><span class="eyebrow">5 · When do I cook?</span></div>
+<ul class="sched">${sched.join("")}</ul>
+<div class="recipes">${recHtml}</div>
+<p class="muted">Food safety: put leftovers in the fridge within an hour of cooking. Eat cooked rice within 24 hours and other leftovers within 2–3 days. Reheat until steaming hot all the way through, and only reheat once.</p>
+<div class="rhead"><span class="eyebrow">6 · What carries over?</span></div>
+${leftovers.length?`<ul style="margin:0;padding-left:1.2em;display:grid;gap:4px">${leftovers.map(t=>`<li>${esc(t)}</li>`).join("")}</ul><p class="muted">These stay in your cupboard for next week, so next week's shop will be cheaper.</p>`:"<p>Almost nothing. Every pack gets used.</p>"}
+<p class="note">Calories and protein are starting estimates, not medical advice. Adjust after 2–3 weeks based on your weight trend, hunger and training. If you have a health condition, talk to a doctor or registered dietitian.</p>`;
+const lines=[];
+res.lists.forEach((l,t)=>{if(!l.length)return;lines.push(tripLabel(t).toUpperCase());CATS.forEach(cat=>l.filter(x=>I[x.id].cat===cat).forEach(x=>lines.push(`[ ] ${I[x.id].n}: ${x.packs} × ${I[x.id].pl} — ~${eur(x.pr)}`)));lines.push("")});
+lines.push(`Ballpark total: ${eur(res.cost)} (budget €${o.budget}). Prices are typical Cyprus supermarket estimates; your real total will differ.`);
+const listTxt=lines.join("\n");
+const planTxt=listTxt+"\n\n7-DAY PLAN\n"+res.plan.map(p=>`Day ${p.d+1}\n  Breakfast: ${p.b.n}\n  Lunch: ${p.lunch.n}${p.lunchFrom?" (leftovers)":""}\n  Dinner: ${p.dinner.n}${p.dinnerServ>1?" (cook 2 portions)":""}${p.snacks.length?"\n  Snacks: "+p.snacks.map(s=>s.n).join(", "):""}`).join("\n")+
+"\n\nRECIPES (per portion)\n"+uniq.map(({m})=>{const ingS=m.t==="s"?m.ing:sIng(m.ing,res.S);return `${m.n}\n`+ingS.map(([id,g])=>"  - "+fmtQty(id,g)).join("\n")+"\n"+m.steps.map((s,i)=>`  ${i+1}. ${s}`).join("\n")}).join("\n\n");
+if(!SAMPLE){
+$("#copyList").addEventListener("click",()=>copyText(listTxt,"Shopping list copied"));
+$("#copyAll").addEventListener("click",()=>copyText(planTxt,"Whole plan copied"));
+$("#reshuffle").addEventListener("click",()=>{seed=(seed*1103515245+12345)>>>0;run(true)});
+}
+el.querySelectorAll(".gi input").forEach(cb=>cb.addEventListener("change",()=>cb.closest(".gi").classList.toggle("done",cb.checked)));
+el.querySelectorAll("[data-swap]").forEach(b=>b.addEventListener("click",()=>swapMeal(b.dataset.swap,+b.dataset.idx)));
+}
+function swapMeal(key,idx){
+if(!CUR)return;
+const o=CUR.o,T=CUR.T,P=pools(o),cap=capOf(o);
+const pool={breakfasts:P.B,mains:P.M,snacks:P.S,quick:P.Q}[key];
+const cur=key==="quick"?CUR.c.quick:CUR.c[key][idx];
+const tk=key+idx;swapTried[tk]=swapTried[tk]||new Set([cur.id]);
+const inPlan=new Set([...CUR.c.breakfasts,...CUR.c.mains,...CUR.c.snacks,CUR.c.quick].map(m=>m.id));
+const fruits=P.S.some(s=>s.fruit);
+const opts=[];let minOver=null;
+for(const alt of pool){
+if(inPlan.has(alt.id)||swapTried[tk].has(alt.id))continue;
+const nc={...CUR.c,[key]:key==="quick"?alt:CUR.c[key].map((m,j)=>j===idx?alt:m)};
+if(key==="snacks"&&fruits&&!nc.snacks.some(s=>s.fruit))continue;
+const ev=evaluate(nc,o,T);
+const protOk=ev.avgP>=Math.min(CUR.avgP,T.p)*0.92;
+if(ev.cost<=cap&&protOk)opts.push({alt,ev});
+else if(protOk&&(minOver==null||ev.cost<minOver))minOver=ev.cost;
+}
+if(!opts.length){swapTried[tk]=new Set([cur.id]);
+flash(minOver!=null?`Any swap here goes over budget. The cheapest one needs about €${Math.ceil(minOver-cap)} more.`:"No other meal matches your filters here");return}
+opts.sort((a,b)=>a.ev.cost-b.ev.cost);
+const pick=opts[Math.floor(Math.random()*Math.min(3,opts.length))];
+swapTried[tk].add(pick.alt.id);
+render({...pick.ev,T,o,cap});
+flash(`Swapped in ${pick.alt.n}`);
+}
+/* ---------------------------- library & protein table ---------------------------- */
+function renderLib(){
+const t=document.querySelector('input[name="lib"]:checked').value;
+const st=curStore();
+$("#libGrid").innerHTML=MEALS.filter(m=>m.t===t).map(m=>{
+const n=nut(m.ing,1);const fl=m.ing.map(([id])=>I[id].fl).join("");
+const al=ALLERGENS.filter(([f])=>fl.includes(f)).map(([,l])=>l);
+const tags=[];
+if(m.cy)tags.push('<span class="tg cy">Cypriot</span>');
+if(!/[CBPF]/.test(fl))tags.push('<span class="tg veg">Vegetarian</span>');
+if(m.min<=15&&m.t!=="s")tags.push('<span class="tg">Quick</span>');
+if(n.p>=30)tags.push('<span class="tg">High protein</span>');
+if(m.oven)tags.push('<span class="tg">Oven</span>');
+return `<details class="mcard"><summary><span class="mt">${esc(m.n)}</span>
+<span class="nums"><span><b>${Math.round(n.k)}</b> kcal</span><span><b>${Math.round(n.p)} g</b> protein</span><span><b>~${eur(servingCost(m.ing,st))}</b></span>${m.min?`<span>${m.act} min hands-on</span>`:""}</span>
+${tags.length?`<span class="tagrow">${tags.join("")}</span>`:""}</summary>
+<div class="dbody">${SAMPLE?`<p class="muted">Ingredients, portion sizes and method are in the full planner. <a href="#planner">Build your own week</a>.</p>`:`<ul>${m.ing.map(([id,g,opt])=>`<li>${fmtQty(id,g)}${opt?" (optional)":""}</li>`).join("")}</ul>
+<ol>${m.steps.map(s=>`<li>${esc(s)}</li>`).join("")}</ol><p class="muted">${esc(m.keep)}</p>`}
+<p class="muted"><b>Contains:</b> ${al.length?al.join(", "):"none of the 7 listed allergens"}${m.soak?" · needs overnight soaking":""}</p></div></details>`}).join("");
+}
+const PROT=[["eggs",120,"2 eggs"],["yogurt",200,"200 g"],["chicken",150,"150 g raw"],["thigh",150,"150 g raw"],["lentils",60,"60 g dry"],["chickpeas",60,"60 g dry"],["tuna",112,"1 can, drained"],["sardines",90,"1 can, drained"],["milk",250,"250 ml"],["cottage",150,"150 g"],["beans",240,"1 can, drained"],["tofu",150,"150 g"]];
+function renderProt(){
+const st=curStore();
+const rows=PROT.map(([id,g,s])=>{const pp=I[id].p*g/100,c=g/I[id].pack*price(id,st);return {id,s,pp,c,per:c/pp*25,chk:priceInfo(id,st).chk}}).sort((a,b)=>a.per-b.per);
+$("#protBody").innerHTML=rows.map(r=>`<tr><td>${esc(I[r.id].n)}</td><td>${r.s}</td><td class="num">${Math.round(r.pp)} g</td><td class="num">${eur(r.c)}</td><td class="num"><span class="per25">~${eur(r.per)}</span></td></tr>`).join("");
+}
+function calc(){const c=parseFloat($("#cPrice").value),p=parseFloat($("#cProt").value);$("#cOut").textContent=p>0&&c>=0?eur(c/p*25):"–"}
+$("#cPrice").addEventListener("input",calc);$("#cProt").addEventListener("input",calc);calc();
+$("#libTabs").addEventListener("change",renderLib);
+/* ---------------------------- wire up ---------------------------- */
+let seed=store.get("ggg.seed",12345);
+function run(fresh){
+const o=readOpts();store.set("ggg.opts",o);store.set("ggg.seed",seed);swapTried={};
+updateBodySum();renderLib();renderProt();
+$("#result").innerHTML='<p class="eyebrow">Building your week…</p>';
+setTimeout(()=>render(search(o,seed)),30);
+if(fresh)setTimeout(()=>$("#result").scrollIntoView({behavior:"smooth",block:"start"}),60);
+}
+if(!SAMPLE)$("#pf").addEventListener("submit",e=>{e.preventDefault();run(true)});
+// restore saved plan if there is one
+(function boot(){
+if(SAMPLE){renderLib();renderProt();render(search(SAMPLE_OPTS,SAMPLE_SEED));return}
+const saved=store.get("ggg.plan",null);
+writeOpts(saved?saved.o:store.get("ggg.opts",null));
+updateBodySum();renderLib();renderProt();
+if(saved){
+const o=readOpts();const c=fromIds(saved.ids,o);
+if(c&&o.a>=18){const T=targets(o);const ev=evaluate(c,o,T);if(ev.cost<=capOf(o)){render({...ev,T,o,cap:capOf(o)});return}}
+}
+run(false);
+})();
+window.__ggg={search,evaluate,readOpts,targets,pools,banned,MEALS,I,capOf};
+})();
+</script>
+</body>
+</html>
